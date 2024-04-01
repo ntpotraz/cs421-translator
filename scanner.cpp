@@ -12,7 +12,7 @@ using namespace std;
 // --------- Two DFAs ---------------------------------
 
 // WORD DFA 
-// Done by: *Adam Salter*
+// Done by: *Adam Salter, Nathan Potraz, Alejandro A*
 // RE:   **
 
 
@@ -26,104 +26,157 @@ bool word(string s) {
     int charpos = 0;
     
     while (s[charpos] != '\0') {
-        // State q0
-        if (state == 0) {
-            if (s[charpos] == 'V')
-                state = 7;
-            else if (s[charpos] == 'n')
-                state = 3;
-            else if (s[charpos] == 'd' || s[charpos] == 'w' || s[charpos] == 'z' || s[charpos] == 'z' || s[charpos] == 'y'  || s[charpos] == 'j')
-                state = 2;
-	    else if (s[charpos] == 'b' || s[charpos] == 'g' || s[charpos] == 'h' || s[charpos] == 'k' || s[charpos] == 'm'  || s[charpos] == 'n'|| s[charpos] == 'p' || s[charpos] == 'r')
-                state = 3;
-            else if (s[charpos] == 's')
-                state = 5;
-            else if (s[charpos] == 't')
-                state = 4;
-            else if (s[charpos] == 'c')
-                state = 6;
-            else
-                return false;
+        switch(state) {
+            case 0:
+                switch(s[charpos]) {
+                    case 'V':
+                        state = 7;
+                        break;
+                    case 'n':
+                        state = 3;
+                        break;
+                    case 'd':
+                    case 'w':
+                    case 'z':
+                    case 'y':
+                    case 'j':
+                        state = 2;
+                        break;
+                    case 'b':
+                    case 'g':
+                    case 'h':
+                    case 'k':
+                    case 'm':
+                    case 'p':
+                    case 'r':
+                        state = 3;
+                        break;
+                    case 's':
+                        state = 5;
+                        break;
+                    case 't':
+                        state = 4;
+                        break;
+                    case 'c':
+                        state = 6;
+                        break;
+                    default:
+                        return false;
+                }
+                break;
+            case 1:
+                if (s[charpos] == 'n')
+                    state = 0;
+                break;
+            case 2:
+                if (s[charpos] == 'V')
+                    state = 7;
+                break;
+            case 3:
+                switch(s[charpos]) {
+                    case 'V':
+                        state = 7;
+                        break;
+                    case 'y':
+                        state = 2;
+                        break;
+                }
+                break;
+            case 4:
+                switch(s[charpos]) {
+                    case 'V':
+                        state = 7;
+                        break;
+                    case 's':
+                        state = 2;
+                        break;
+                }
+                break;
+            case 5:
+                switch(s[charpos]) {
+                    case 'V':
+                        state = 7;
+                        break;
+                    case 'h':
+                        state = 2;
+                        break;
+                }
+                break;
+            case 6:
+                if (s[charpos] == 'h')
+                    state = 2;
+                break;
+            case 7:
+                switch(s[charpos]) {
+                    case 'V':
+                        state = 7;
+                        break;
+                    case 'n':
+                        state = 8;
+                        break;
+                    case 'd':
+                    case 'w':
+                    case 'z':
+                    case 'y':
+                    case 'j':
+                        state = 2;
+                        break;
+                    case 'b':
+                    case 'g':
+                    case 'h':
+                    case 'k':
+                    case 'm':
+                    case 'p':
+                    case 'r':
+                        state = 3;
+                        break;
+                    case 's':
+                        state = 5;
+                        break;
+                    case 't':
+                        state = 4;
+                        break;
+                    case 'c':
+                        state = 6;
+                        break;
+                }
+                break;
+            case 8:
+                switch(s[charpos]) {
+                    case 'V':
+                        state = 7;
+                        break;
+                    case 'n':
+                        state = 3;
+                        break;
+                    case 'd':
+                    case 'w':
+                    case 'z':
+                    case 'y':
+                    case 'j':
+                        state = 2;
+                        break;
+                    case 'b':
+                    case 'g':
+                    case 'h':
+                    case 'k':
+                    case 'm':
+                    case 'p':
+                    case 'r':
+                        state = 3;
+                        break;
+                    case 's':
+                        state = 5;
+                        break;
+                    case 't':
+                        state = 4;
+                        break;
+                    case 'c':
+                        state = 6;
+                        break;
+                }
+                break;
         }
-        
-        // State q1
-        if (state == 1 && s[charpos] == 'n')
-            state = 0;
-
-        // State qsa
-        if (state == 2 && s[charpos] == 'V')
-            state = 7;
-		
-
-
-        // State qy
-        if (state == 3) {
-            if (s[charpos] == 'V')
-                state = 7;
-            else if (s[charpos] == 'y')
-                state = 2;
-        }
-
-        // State qt
-        if (state == 4) {
-            if (s[charpos] == 'V')
-                state = 7;
-            else if (s[charpos] == 's')
-                state = 2;
-        }
-
-        // State qs
-        if (state == 5) {
-            if (s[charpos] == 'V')
-                state = 7;
-            else if (s[charpos] == 'h')
-                state = 2;
-        }
-
-        // State qc
-        if (state == 6 && s[charpos] == 'h')
-            state = 2;
-
-        // State q0q1
-        if (state == 7) {
-            if (s[charpos] == 'V')
-                state = 7;
-            else if (s[charpos] == 'n')
-                state = 8;
-	    else if (s[charpos] == 'd' || s[charpos] == 'w' || s[charpos] == 'z' || s[charpos] == 'z' || s[charpos] == 'y'  || s[charpos] == 'j')
-                state = 2;
-	    else if (s[charpos] == 'b' || s[charpos] == 'g' || s[charpos] == 'h' || s[charpos] == 'k' || s[charpos] == 'm'  || s[charpos] == 'n'|| s[charpos] == 'p' || s[charpos] == 'r')
-                state = 3;
-            else if (s[charpos] == 's')
-                state = 5;
-            else if (s[charpos] == 'h')
-                state = 2;
-            else if (s[charpos] == 't')
-                state = 4;
-            else if (s[charpos] == 'c')
-                state = 6;
-        }
-
-        // State q0qy
-        if (state == 8) {
-            if (s[charpos] == 'V')
-                state = 7;
-            else if (s[charpos] == 'n')
-                state = 3;
-	    else if (s[charpos] == 'd' || s[charpos] == 'w' || s[charpos] == 'z' || s[charpos] == 'z' || s[charpos] == 'y'  || s[charpos] == 'j')
-                state = 2;
-	    else if (s[charpos] == 'b' || s[charpos] == 'g' || s[charpos] == 'h' || s[charpos] == 'k' || s[charpos] == 'm'  || s[charpos] == 'n'|| s[charpos] == 'p' || s[charpos] == 'r')
-                state = 3;
-            else if (s[charpos] == 's')
-                state = 5;
-            else if (s[charpos] == 't')
-                state = 4;
-            else if (s[charpos] == 'c')
-                state = 6;
-            else if (s[charpos] == 'y')
-                state = 2;
-        }
-
         charpos++;
     }
 
@@ -133,6 +186,7 @@ bool word(string s) {
     else
         return false;
 }
+
 
 	
 	
