@@ -195,12 +195,32 @@ bool word(string s) {
 // Done by: **
 //
 
-bool period (string s)
-{  // complete this **
-	charpos
+bool period(string s) {
+    int state = 0;
+    int charpos = 0;
 
+    while (s[charpos] != '\0') {
+        switch (state) {
+            case 0:
+                if (s[charpos] == '.')
+                    state = 1;
+                else
+                    return false; // Not a period
+                break;
+            case 1:
+                return false; // Already encountered a period, so any additional characters are invalid
+                break;
+        }
+        charpos++;
+    }
 
+    // Where did I end up?
+    if (state == 1)
+        return true; // End in a final state (period encountered)
+    else
+        return false;
 }
+
 
 // ------ Three  Tables -------------------------------------
 
