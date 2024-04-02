@@ -12,7 +12,7 @@ using namespace std;
 // --------- Two DFAs ---------------------------------
 
 // WORD DFA 
-// Done by: *Adam Salter, Nathan Potraz, Alejandro A*
+// Done by: *Adam Salter, Nathan Potraz*
 // RE:   **
 
 
@@ -26,10 +26,17 @@ bool word(string s) {
     int charpos = 0;
     
     while (s[charpos] != '\0') {
+      // cout << "CharPos: " << s[charpos] << ", State: " << state << endl; // For testing
         switch(state) {
-            case 0:
+            case 0: // q0
                 switch(s[charpos]) {
-                    case 'V':
+                    case 'a':
+                    case 'e':
+                    case 'i':
+                    case 'o':
+                    case 'u':
+                    case 'I':
+                    case 'E':
                         state = 7;
                         break;
                     case 'n':
@@ -64,17 +71,29 @@ bool word(string s) {
                         return false;
                 }
                 break;
-            case 1:
+            case 1: // q1
                 if (s[charpos] == 'n')
                     state = 0;
                 break;
-            case 2:
-                if (s[charpos] == 'V')
-                    state = 7;
-                break;
-            case 3:
+            case 2: // qsa
+                    case 'a':
+                    case 'e':
+                    case 'i':
+                    case 'o':
+                    case 'u':
+                    case 'I':
+                    case 'E':
+                        state = 7;
+                        break;
+            case 3: // qy
                 switch(s[charpos]) {
-                    case 'V':
+                    case 'a':
+                    case 'e':
+                    case 'i':
+                    case 'o':
+                    case 'u':
+                    case 'I':
+                    case 'E':
                         state = 7;
                         break;
                     case 'y':
@@ -82,9 +101,15 @@ bool word(string s) {
                         break;
                 }
                 break;
-            case 4:
+            case 4: // qt
                 switch(s[charpos]) {
-                    case 'V':
+                    case 'a':
+                    case 'e':
+                    case 'i':
+                    case 'o':
+                    case 'u':
+                    case 'I':
+                    case 'E':
                         state = 7;
                         break;
                     case 's':
@@ -92,9 +117,15 @@ bool word(string s) {
                         break;
                 }
                 break;
-            case 5:
+            case 5: // qs
                 switch(s[charpos]) {
-                    case 'V':
+                    case 'a':
+                    case 'e':
+                    case 'i':
+                    case 'o':
+                    case 'u':
+                    case 'I':
+                    case 'E':
                         state = 7;
                         break;
                     case 'h':
@@ -102,13 +133,19 @@ bool word(string s) {
                         break;
                 }
                 break;
-            case 6:
+            case 6: // qc
                 if (s[charpos] == 'h')
                     state = 2;
                 break;
-            case 7:
+            case 7: // q0q1
                 switch(s[charpos]) {
-                    case 'V':
+                    case 'a':
+                    case 'e':
+                    case 'i':
+                    case 'o':
+                    case 'u':
+                    case 'I':
+                    case 'E':
                         state = 7;
                         break;
                     case 'n':
@@ -141,9 +178,15 @@ bool word(string s) {
                         break;
                 }
                 break;
-            case 8:
+            case 8: // q0qy
                 switch(s[charpos]) {
-                    case 'V':
+                    case 'a':
+                    case 'e':
+                    case 'i':
+                    case 'o':
+                    case 'u':
+                    case 'I':
+                    case 'E':
                         state = 7;
                         break;
                     case 'n':
@@ -181,6 +224,7 @@ bool word(string s) {
     }
 
     // Where did I end up?
+    // cout << "State: " << state << endl; // For Testing
     if (state == 0 || state == 7 || state == 8)
         return true; // End in a final state
     else
@@ -353,10 +397,6 @@ int main()
   tokentype thetype;
   string theword; 
   string filename;
-
-  for(const auto& word : reservedWords) {
-    cout << "String: " << word.str << ", TokenType: " << tokenName[word.token] << endl;
-  }
 
   cout << "Enter the input file name: ";
   cin >> filename;
