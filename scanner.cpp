@@ -192,7 +192,7 @@ bool word(string s) {
 	
 
 // PERIOD DFA 
-// Done by: **
+// Done by: Alejandro Agustin
 //
 
 bool period(string s) {
