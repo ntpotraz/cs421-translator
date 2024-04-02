@@ -197,24 +197,45 @@ bool word(string s) {
 
 bool period (string s)
 {  // complete this **
-	charpos
+	//charpos
 
 
+  return false;
 }
 
 // ------ Three  Tables -------------------------------------
 
-// TABLES Done by: **
+// TABLES Done by: *Nathan Potraz*
 
 // ** Update the tokentype to be WORD1, WORD2, PERIOD, ERROR, EOFM, etc.
-enum tokentype {ERROR, };
+enum tokentype {WORD1, WORD2, PERIOD, ERROR, EOFM, VERB, VERBNEG, VERBPAST, VERBPASTNEG, IS, WAS, OBJECT, SUBJECT, DESTINATION, PRONOUN, CONNECTOR};
 
 // ** For the display names of tokens - must be in the same order as the tokentype.
-string tokenName[30] = { }; 
-
+string tokenName[30] = {"WORD1", "WORD2", "PERIOD", "ERROR", "EOFM", "VERB", "VERBNEG", "VERBPAST", "VERBPASTNEG", "IS", "WAS", "OBJECT", "SUBJECT", "DESTINATION", "PRONOUN", "CONNECTOR"}; 
 // ** Need the reservedwords table to be set up here. 
 // ** Do not require any file input for this. Hard code the table.
 // ** a.out should work without any additional files.
+string reservedWords[19] = {
+  {"masu", tokentype::VERB},
+  {"masen", tokentype::VERBNEG},
+  {"mashita", tokentype::VERBPAST},
+  {"masendeshita", tokentype::VERBPASTNEG},
+  {"desu", tokentype::IS},
+  {"deshita", tokentype::WAS},
+  {"o", tokentype::OBJECT},
+  {"wa", tokentype::SUBJECT},
+  {"ni", tokentype::DESTINATION},
+  {"watashi", tokentype::PRONOUN},
+  {"anata", tokentype::PRONOUN},
+  {"kare", tokentype::PRONOUN},
+  {"kanojo", tokentype::PRONOUN},
+  {"sore", tokentype::PRONOUN},
+  {"mata", tokentype::CONNECTOR},
+  {"soshite", tokentype::CONNECTOR},
+  {"shikashi", tokentype::CONNECTOR},
+  {"dakara", tokentype::CONNECTOR},
+  {"eofm", tokentype::EOFM},
+};
 
 
 // ------------ Scanner and Driver ----------------------- 
@@ -223,7 +244,7 @@ ifstream fin;  // global stream for reading from the input file
 
 // Scanner processes only one word each time it is called
 // Gives back the token type and the word itself
-// ** Done by: 
+// Done by: *Nathan Potraz* 
 int scanner(tokentype& tt, string& w)
 {
 
@@ -244,6 +265,7 @@ int scanner(tokentype& tt, string& w)
   4. Return the token type & string  (pass by reference)
   */
 
+  return -1;
 }//the end of scanner
 
 
@@ -257,6 +279,10 @@ int main()
   tokentype thetype;
   string theword; 
   string filename;
+
+  for(string word : reservedWords) {
+    cout << word << endl;
+  }
 
   cout << "Enter the input file name: ";
   cin >> filename;
