@@ -252,9 +252,16 @@ ifstream fin;  // global stream for reading from the input file
 // Done by: *Nathan Potraz* 
 int scanner(tokentype& tt, string& w)
 {
-
+  
   // ** Grab the next word from the file via fin
+  
+  fin >> w;
+
   // 1. If it is eofm, return right now.   
+  if(w == "eofm") {
+    tt = EOFM;
+    return tt;
+  }
   
   /*  **
   2. Call the token functions (word and period) 
@@ -270,7 +277,47 @@ int scanner(tokentype& tt, string& w)
   4. Return the token type & string  (pass by reference)
   */
 
-  return -1;
+  if(word(w)) {
+    bool foundWord = false;
+
+    for(auto word : reservedWords) {
+      if(word.str == w) {
+        tt = word.token;
+        foundWord = true;
+        break;
+      }
+    }
+
+    if(!foundWord) {
+      char lastLetter = w[w.length() - 1];
+      
+      switch (lastLetter) {
+        case 'a':
+        case 'e':
+        case 'i':
+        case 'o':
+        case 'u':
+        case 'n':
+          tt = WORD1;
+          break;
+        case 'I':
+        case 'E':
+          tt = WORD2;
+          break;
+        default:
+          tt = ERROR;
+          break;
+      }
+    }
+
+  } else if(period(w)) {
+      tt = PERIOD;
+  } else {
+    tt = ERROR;
+    cout << "ERROR: NOT VALID WORD OR PERIOD" << endl;
+  }
+
+  return tt;
 }//the end of scanner
 
 
