@@ -215,7 +215,12 @@ string tokenName[30] = {"WORD1", "WORD2", "PERIOD", "ERROR", "EOFM", "VERB", "VE
 // ** Need the reservedwords table to be set up here. 
 // ** Do not require any file input for this. Hard code the table.
 // ** a.out should work without any additional files.
-string reservedWords[19] = {
+struct wordTable {
+  string str;
+  tokentype token;
+};
+
+wordTable reservedWords[19] = {
   {"masu", tokentype::VERB},
   {"masen", tokentype::VERBNEG},
   {"mashita", tokentype::VERBPAST},
@@ -280,8 +285,8 @@ int main()
   string theword; 
   string filename;
 
-  for(string word : reservedWords) {
-    cout << word << endl;
+  for(const auto& word : reservedWords) {
+    cout << "String: " << word.str << ", TokenType: " << tokenName[word.token] << endl;
   }
 
   cout << "Enter the input file name: ";
