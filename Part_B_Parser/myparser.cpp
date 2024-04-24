@@ -436,27 +436,44 @@ int scanner(tokentype& tt, string& w)
 
 // ** Need syntaxerror1 and syntaxerror2 functions (each takes 2 args)
 //    to display syntax error messages as specified by me.  
+tokentype saved_token; //stores last token 
+bool token_available = false; //indicates if there was a saved token ava
 
 // Type of error: **
 // Done by: ** 
-void syntaxerror1(  ){    }
+void syntaxerror1( tokentype expected, string function ){ 
+   cout << "Syntax error: Expected " << tokenName[expected] << " at" << function << endl;
+   exit(1);
+}
 // Type of error: **
 // Done by: ** 
-void syntaxerror2(  ) {    }
+void syntaxerror2( tokentype unexpected, string function ) {
+   cout << "Syntax error: Unexpected " << tokenName[unexpected] << " in " << function << endl;
+   exit(1);
+}
 
 // ** Need the updated match and next_token with 2 global vars
 // saved_token and saved_lexeme
+tokentype scanner();
 
 // Purpose: **
 // Done by: **
 tokentype next_token(){
-    return ERROR;
+   if(!token_available){
+      saved_token = scanner();
+      token_available = true;
+   }
+   return saved_token;
 }
 
 // Purpose: **
 // Done by: **
 bool match(tokentype expected) {
-    return false;
+   if (next_token() != expected){
+      syntaxerror1(expected, "Match");
+   }else{
+      token_available = false;
+   }
 }
 
 // ----- RDP functions - one per non-term -------------------
