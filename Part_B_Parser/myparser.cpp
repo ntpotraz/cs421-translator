@@ -392,7 +392,6 @@ int scanner(tokentype& tt, string& w)
   return tt;
 }//the end of scanner
 
-// ------------------------------- Parser --------------------------------------
 
 // The temporary test driver to just call the scanner repeatedly  
 // This will go away after this assignment
@@ -434,6 +433,8 @@ int scanner(tokentype& tt, string& w)
           cat scanner.cpp parser.cpp > myparser.cpp
 */
 
+// ------------------------------- Parser --------------------------------------
+
 //=================================================
 // File parser.cpp written by Group Number: *10*
 //=================================================
@@ -460,14 +461,14 @@ void syntaxerror2( tokentype unexpected, string function ) {
 
 // ** Need the updated match and next_token with 2 global vars
 // saved_token and saved_lexeme
-tokentype scanner();
 
 // Purpose: **
 // Done by: **
 tokentype next_token(){
-   if(!token_available){
-      saved_token = scanner();
-      token_available = true;
+		string saved_lexeme; // The current word being looked at
+    if(!token_available){
+        scanner(saved_token, saved_lexeme);
+        token_available = true;
    }
    return saved_token;
 }
@@ -628,6 +629,7 @@ int main()
 
   //** calls the <story> to start parsing
   //** closes the input file 
+    
 
   return 0;
 }// end
