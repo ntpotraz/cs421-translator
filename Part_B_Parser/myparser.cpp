@@ -329,6 +329,8 @@ int scanner(tokentype& tt, string& w)
 
   fin >> w;
 
+	cout << "Scanner called using word: " << w << endl;
+
   // 1. If it is eofm, return right now.   
   if(w == "eofm") {
     tt = EOFM;
@@ -468,6 +470,10 @@ tokentype next_token(){
 		string saved_lexeme; // The current word being looked at
     if(!token_available){
         scanner(saved_token, saved_lexeme);
+        if(saved_token == EOFM) {
+          cout << "\nSuccessfully parsed <story>" << endl;
+          exit(0);
+        }
         token_available = true;
    }
    return saved_token;
@@ -481,6 +487,7 @@ bool match(tokentype expected) {
         return false;
    } else {
         token_available = false;
+				cout << "Matched " << tokenName[expected] << endl;
         return true;
    }
 }
@@ -522,6 +529,7 @@ void noun() {
 void after_subject() {
     cout << "Processing <after subject>" << endl;
     switch(next_token()) {
+        case WORD2:
         case VERB:
             verb();
             tense();
@@ -596,6 +604,7 @@ void be() {
 void after_object() {
     cout << "Processing <after object>" << endl;
     switch(next_token()) {
+        case WORD2:
         case VERB:
             verb();
             tense();
@@ -630,7 +639,11 @@ int main()
   //** calls the <story> to start parsing
   //** closes the input file 
     
+	while(true) {
+		s();
+	}
 
+	fin.close();
   return 0;
 }// end
 //** require no other input files!
