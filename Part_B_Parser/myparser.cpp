@@ -231,10 +231,6 @@ bool word(string s) {
         return false;
 }
 
-
-	
-	
-
 // PERIOD DFA 
 // Done by: Alejandro Agustin
 //
@@ -287,25 +283,25 @@ struct wordTable {
 };
 
 wordTable reservedWords[19] = {
-  {"masu", tokentype::VERB},
-  {"masen", tokentype::VERBNEG},
-  {"mashita", tokentype::VERBPAST},
-  {"masendeshita", tokentype::VERBPASTNEG},
-  {"desu", tokentype::IS},
-  {"deshita", tokentype::WAS},
-  {"o", tokentype::OBJECT},
-  {"wa", tokentype::SUBJECT},
-  {"ni", tokentype::DESTINATION},
-  {"watashi", tokentype::PRONOUN},
-  {"anata", tokentype::PRONOUN},
-  {"kare", tokentype::PRONOUN},
-  {"kanojo", tokentype::PRONOUN},
-  {"sore", tokentype::PRONOUN},
-  {"mata", tokentype::CONNECTOR},
-  {"soshite", tokentype::CONNECTOR},
-  {"shikashi", tokentype::CONNECTOR},
-  {"dakara", tokentype::CONNECTOR},
-  {"eofm", tokentype::EOFM},
+  {"masu", VERB},
+  {"masen", VERBNEG},
+  {"mashita", VERBPAST},
+  {"masendeshita", VERBPASTNEG},
+  {"desu", IS},
+  {"deshita", WAS},
+  {"o", OBJECT},
+  {"wa", SUBJECT},
+  {"ni", DESTINATION},
+  {"watashi", PRONOUN},
+  {"anata", PRONOUN},
+  {"kare", PRONOUN},
+  {"kanojo", PRONOUN},
+  {"sore", PRONOUN},
+  {"mata", CONNECTOR},
+  {"soshite", CONNECTOR},
+  {"shikashi", CONNECTOR},
+  {"dakara", CONNECTOR},
+  {"eofm", EOFM},
 };
 
 
@@ -346,9 +342,9 @@ int scanner(tokentype& tt, string& w)
   if(word(w)) {
     bool foundWord = false;
 
-    for(auto word : reservedWords) {
-      if(word.str == w) {
-        tt = word.token;
+    for(int i = 0; i < sizeof(reservedWords); i++) {
+      if(reservedWords[i].str == w) {
+        tt = reservedWords[i].token;
         foundWord = true;
         break;
       }
@@ -470,9 +466,11 @@ tokentype next_token(){
 // Done by: **
 bool match(tokentype expected) {
    if (next_token() != expected){
-      syntaxerror1(expected, "Match");
-   }else{
-      token_available = false;
+        syntaxerror1(expected, "Match");
+        return false;
+   } else {
+        token_available = false;
+        return true;
    }
 }
 
