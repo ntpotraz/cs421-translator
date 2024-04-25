@@ -3,6 +3,16 @@
 #include<string>
 using namespace std;
 
+void verb();
+void be();
+void tense();
+void after_object();
+void after_subject();
+void noun();
+void after_noun();
+
+
+
 /* Look for all **'s and complete them */
 
 //=====================================================
@@ -24,7 +34,7 @@ bool word(string s) {
 
     int state = 0;
     int charpos = 0;
-    
+
     while (s[charpos] != '\0') {
       // cout << "CharPos: " << s[charpos] << ", State: " << state << endl; // For testing
         switch(state) {
@@ -314,9 +324,9 @@ ifstream fin;  // global stream for reading from the input file
 // Done by: *Nathan Potraz* 
 int scanner(tokentype& tt, string& w)
 {
-  
+
   // ** Grab the next word from the file via fin
-  
+
   fin >> w;
 
   // 1. If it is eofm, return right now.   
@@ -324,7 +334,7 @@ int scanner(tokentype& tt, string& w)
     tt = EOFM;
     return tt;
   }
-  
+
   /*  **
   2. Call the token functions (word and period) 
      one after another (if-then-else).
@@ -352,7 +362,7 @@ int scanner(tokentype& tt, string& w)
 
     if(!foundWord) {
       char lastLetter = w[w.length() - 1];
-      
+
       switch (lastLetter) {
         case 'a':
         case 'e':
@@ -483,6 +493,127 @@ bool match(tokentype expected) {
 // Grammar: **
 // Done by: **
 
+// Processing <s>
+// Done by: Adam Salter
+void s() {
+    cout << "Processing <s>" << endl;
+    if (next_token() == CONNECTOR) {  // Optional CONNECTOR
+        match(CONNECTOR);
+    }
+    noun();
+    match(SUBJECT);
+    after_subject();
+}
+
+// Processing <noun>
+// Done by: Adam Salter
+void noun() {
+    cout << "Processing <noun>" << endl;
+    if (next_token() == WORD1 || next_token() == PRONOUN) {
+        match(next_token()); // Matches either WORD1 or PRONOUN
+    } else {
+        syntaxerror2(next_token(), "<noun>");
+    }
+}
+
+// Processing <after subject>
+// Done by: Adam Salter
+void after_subject() {
+    cout << "Processing <after subject>" << endl;
+    switch(next_token()) {
+        case VERB:
+            verb();
+            tense();
+            match(PERIOD);
+            break;
+        case WORD1:
+        case PRONOUN:
+            noun();
+            after_noun();
+            break;
+        default:
+            syntaxerror2(next_token(), "<after subject>");
+    }
+}
+
+// Processing <verb>
+// Done by: Adam Salter
+void verb() {
+    cout << "Processing <verb>" << endl;
+    match(WORD2); // Assuming VERB corresponds to WORD2
+}
+
+// Processing <tense>
+// Done by: Adam Salter
+void tense() {
+    cout << "Processing <tense>" << endl;
+    if (next_token() == VERBPAST || next_token() == VERBPASTNEG || next_token() == VERB || next_token() == VERBNEG) {
+        match(next_token()); // Matches any valid tense
+    } else {
+        syntaxerror2(next_token(), "<tense>");
+    }
+}
+
+// Processing <after noun>
+// Done by: Adam Salter
+void after_noun() {
+    cout << "Processing <after noun>" << endl;
+    switch(next_token()) {
+        case IS:
+        case WAS:
+            be();
+            match(PERIOD);
+            break;
+        case DESTINATION:
+            match(DESTINATION);
+            verb();
+            tense();
+            match(PERIOD);
+            break;
+        case OBJECT:
+            match(OBJECT);
+            after_object();
+            break;
+        default:
+            syntaxerror2(next_token(), "<after noun>");
+    }
+}
+
+// Processing <be>
+// Done by: Adam Salter
+void be() {
+    cout << "Processing <be>" << endl;
+    if (next_token() == IS || next_token() == WAS) {
+        match(next_token());
+    } else {
+        syntaxerror2(next_token(), "<be>");
+    }
+}
+
+// Processing <after object>
+// Done by: Adam Salter
+void after_object() {
+    cout << "Processing <after object>" << endl;
+    switch(next_token()) {
+        case VERB:
+            verb();
+            tense();
+            match(PERIOD);
+            break;
+        case WORD1:
+        case PRONOUN:
+            noun();
+            match(DESTINATION);
+            verb();
+            tense();
+            match(PERIOD);
+            break;
+        default:
+            syntaxerror2(next_token(), "<after object>");
+    }
+}
+
+
 string filename;
 
 //----------- Driver ---------------------------
@@ -498,6 +629,7 @@ int main()
   //** calls the <story> to start parsing
   //** closes the input file 
 
+  return 0;
 }// end
 //** require no other input files!
 //** syntax error EC requires producing errors.txt of error messages
