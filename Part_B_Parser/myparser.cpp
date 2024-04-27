@@ -146,6 +146,11 @@ bool word(string s) {
                     case 'u':
                     case 'I':
                     case 'E':
+                        state = 7; //Added combo for apple
+                        break;
+                    case 'p':
+                    case 'l':
+                    //case 'e':     
                         state = 7;
                         break;
                     case 'n':
@@ -163,7 +168,7 @@ bool word(string s) {
                     case 'h':
                     case 'k':
                     case 'm':
-                    case 'p':
+                    //case 'p':
                     case 'r':
                         state = 3;
                         break;
@@ -440,13 +445,13 @@ tokentype saved_token; //stores last token
 bool token_available = false; //indicates if there was a saved token ava
 
 // Type of error: **
-// Done by: ** 
+// Done by: Alejandro Agustin 
 void syntaxerror1( tokentype expected, string function ){ 
    cout << "Syntax error: Expected " << tokenName[expected] << " at" << function << endl;
    exit(1);
 }
 // Type of error: **
-// Done by: ** 
+// Done by: Alejandro Agustin 
 void syntaxerror2( tokentype unexpected, string function ) {
    cout << "Syntax error: Unexpected " << tokenName[unexpected] << " in " << function << endl;
    exit(1);
@@ -457,7 +462,7 @@ void syntaxerror2( tokentype unexpected, string function ) {
 tokentype scanner();
 
 // Purpose: **
-// Done by: **
+// Done by: Alejandro Agustin
 tokentype next_token(){
    if(!token_available){
       saved_token = scanner();
@@ -467,7 +472,7 @@ tokentype next_token(){
 }
 
 // Purpose: **
-// Done by: **
+// Done by: Alejandro Agustin
 bool match(tokentype expected) {
    if (next_token() != expected){
       syntaxerror1(expected, "Match");
