@@ -3,6 +3,16 @@
 #include<string>
 using namespace std;
 
+void verb();
+void be();
+void tense();
+void after_object();
+void after_subject();
+void noun();
+void after_noun();
+
+
+
 /* Look for all **'s and complete them */
 
 //=====================================================
@@ -24,7 +34,7 @@ bool word(string s) {
 
     int state = 0;
     int charpos = 0;
-    
+
     while (s[charpos] != '\0') {
       // cout << "CharPos: " << s[charpos] << ", State: " << state << endl; // For testing
         switch(state) {
@@ -236,10 +246,6 @@ bool word(string s) {
         return false;
 }
 
-
-	
-	
-
 // PERIOD DFA 
 // Done by: Alejandro Agustin
 //
@@ -292,25 +298,25 @@ struct wordTable {
 };
 
 wordTable reservedWords[19] = {
-  {"masu", tokentype::VERB},
-  {"masen", tokentype::VERBNEG},
-  {"mashita", tokentype::VERBPAST},
-  {"masendeshita", tokentype::VERBPASTNEG},
-  {"desu", tokentype::IS},
-  {"deshita", tokentype::WAS},
-  {"o", tokentype::OBJECT},
-  {"wa", tokentype::SUBJECT},
-  {"ni", tokentype::DESTINATION},
-  {"watashi", tokentype::PRONOUN},
-  {"anata", tokentype::PRONOUN},
-  {"kare", tokentype::PRONOUN},
-  {"kanojo", tokentype::PRONOUN},
-  {"sore", tokentype::PRONOUN},
-  {"mata", tokentype::CONNECTOR},
-  {"soshite", tokentype::CONNECTOR},
-  {"shikashi", tokentype::CONNECTOR},
-  {"dakara", tokentype::CONNECTOR},
-  {"eofm", tokentype::EOFM},
+  {"masu", VERB},
+  {"masen", VERBNEG},
+  {"mashita", VERBPAST},
+  {"masendeshita", VERBPASTNEG},
+  {"desu", IS},
+  {"deshita", WAS},
+  {"o", OBJECT},
+  {"wa", SUBJECT},
+  {"ni", DESTINATION},
+  {"watashi", PRONOUN},
+  {"anata", PRONOUN},
+  {"kare", PRONOUN},
+  {"kanojo", PRONOUN},
+  {"sore", PRONOUN},
+  {"mata", CONNECTOR},
+  {"soshite", CONNECTOR},
+  {"shikashi", CONNECTOR},
+  {"dakara", CONNECTOR},
+  {"eofm", EOFM},
 };
 
 
@@ -323,17 +329,19 @@ ifstream fin;  // global stream for reading from the input file
 // Done by: *Nathan Potraz* 
 int scanner(tokentype& tt, string& w)
 {
-  
+
   // ** Grab the next word from the file via fin
-  
+
   fin >> w;
+
+	cout << "Scanner called using word: " << w << endl;
 
   // 1. If it is eofm, return right now.   
   if(w == "eofm") {
     tt = EOFM;
     return tt;
   }
-  
+
   /*  **
   2. Call the token functions (word and period) 
      one after another (if-then-else).
@@ -351,9 +359,9 @@ int scanner(tokentype& tt, string& w)
   if(word(w)) {
     bool foundWord = false;
 
-    for(auto word : reservedWords) {
-      if(word.str == w) {
-        tt = word.token;
+    for(int i = 0; i < sizeof(reservedWords); i++) {
+      if(reservedWords[i].str == w) {
+        tt = reservedWords[i].token;
         foundWord = true;
         break;
       }
@@ -361,7 +369,7 @@ int scanner(tokentype& tt, string& w)
 
     if(!foundWord) {
       char lastLetter = w[w.length() - 1];
-      
+
       switch (lastLetter) {
         case 'a':
         case 'e':
@@ -391,7 +399,6 @@ int scanner(tokentype& tt, string& w)
   return tt;
 }//the end of scanner
 
-// ------------------------------- Parser --------------------------------------
 
 // The temporary test driver to just call the scanner repeatedly  
 // This will go away after this assignment
@@ -433,6 +440,8 @@ int scanner(tokentype& tt, string& w)
           cat scanner.cpp parser.cpp > myparser.cpp
 */
 
+// ------------------------------- Parser --------------------------------------
+
 //=================================================
 // File parser.cpp written by Group Number: *10*
 //=================================================
@@ -459,14 +468,18 @@ void syntaxerror2( tokentype unexpected, string function ) {
 
 // ** Need the updated match and next_token with 2 global vars
 // saved_token and saved_lexeme
-tokentype scanner();
 
 // Purpose: **
 // Done by: Alejandro Agustin
 tokentype next_token(){
-   if(!token_available){
-      saved_token = scanner();
-      token_available = true;
+		string saved_lexeme; // The current word being looked at
+    if(!token_available){
+        scanner(saved_token, saved_lexeme);
+        if(saved_token == EOFM) {
+          cout << "\nSuccessfully parsed <story>" << endl;
+          exit(0);
+        }
+        token_available = true;
    }
    return saved_token;
 }
@@ -475,9 +488,12 @@ tokentype next_token(){
 // Done by: Alejandro Agustin
 bool match(tokentype expected) {
    if (next_token() != expected){
-      syntaxerror1(expected, "Match");
-   }else{
-      token_available = false;
+        syntaxerror1(expected, "Match");
+        return false;
+   } else {
+        token_available = false;
+				cout << "Matched " << tokenName[expected] << endl;
+        return true;
    }
 }
 
@@ -489,6 +505,129 @@ bool match(tokentype expected) {
 
 // Grammar: **
 // Done by: **
+
+// Processing <s>
+// Done by: Adam Salter
+void s() {
+    cout << "Processing <s>" << endl;
+    if (next_token() == CONNECTOR) {  // Optional CONNECTOR
+        match(CONNECTOR);
+    }
+    noun();
+    match(SUBJECT);
+    after_subject();
+}
+
+// Processing <noun>
+// Done by: Adam Salter
+void noun() {
+    cout << "Processing <noun>" << endl;
+    if (next_token() == WORD1 || next_token() == PRONOUN) {
+        match(next_token()); // Matches either WORD1 or PRONOUN
+    } else {
+        syntaxerror2(next_token(), "<noun>");
+    }
+}
+
+// Processing <after subject>
+// Done by: Adam Salter
+void after_subject() {
+    cout << "Processing <after subject>" << endl;
+    switch(next_token()) {
+        case WORD2:
+        case VERB:
+            verb();
+            tense();
+            match(PERIOD);
+            break;
+        case WORD1:
+        case PRONOUN:
+            noun();
+            after_noun();
+            break;
+        default:
+            syntaxerror2(next_token(), "<after subject>");
+    }
+}
+
+// Processing <verb>
+// Done by: Adam Salter
+void verb() {
+    cout << "Processing <verb>" << endl;
+    match(WORD2); // Assuming VERB corresponds to WORD2
+}
+
+// Processing <tense>
+// Done by: Adam Salter
+void tense() {
+    cout << "Processing <tense>" << endl;
+    if (next_token() == VERBPAST || next_token() == VERBPASTNEG || next_token() == VERB || next_token() == VERBNEG) {
+        match(next_token()); // Matches any valid tense
+    } else {
+        syntaxerror2(next_token(), "<tense>");
+    }
+}
+
+// Processing <after noun>
+// Done by: Adam Salter
+void after_noun() {
+    cout << "Processing <after noun>" << endl;
+    switch(next_token()) {
+        case IS:
+        case WAS:
+            be();
+            match(PERIOD);
+            break;
+        case DESTINATION:
+            match(DESTINATION);
+            verb();
+            tense();
+            match(PERIOD);
+            break;
+        case OBJECT:
+            match(OBJECT);
+            after_object();
+            break;
+        default:
+            syntaxerror2(next_token(), "<after noun>");
+    }
+}
+
+// Processing <be>
+// Done by: Adam Salter
+void be() {
+    cout << "Processing <be>" << endl;
+    if (next_token() == IS || next_token() == WAS) {
+        match(next_token());
+    } else {
+        syntaxerror2(next_token(), "<be>");
+    }
+}
+
+// Processing <after object>
+// Done by: Adam Salter
+void after_object() {
+    cout << "Processing <after object>" << endl;
+    switch(next_token()) {
+        case WORD2:
+        case VERB:
+            verb();
+            tense();
+            match(PERIOD);
+            break;
+        case WORD1:
+        case PRONOUN:
+            noun();
+            match(DESTINATION);
+            verb();
+            tense();
+            match(PERIOD);
+            break;
+        default:
+            syntaxerror2(next_token(), "<after object>");
+    }
+}
+
 
 string filename;
 
@@ -504,7 +643,13 @@ int main()
 
   //** calls the <story> to start parsing
   //** closes the input file 
+    
+	while(true) {
+		s();
+	}
 
+	fin.close();
+  return 0;
 }// end
 //** require no other input files!
 //** syntax error EC requires producing errors.txt of error messages
