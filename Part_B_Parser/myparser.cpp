@@ -25,6 +25,7 @@ void after_noun();
 // Done by: *Adam Salter, Nathan Potraz*
 // RE:   **
 
+string currWord;
 
 bool word(string s) {
     string array_of_strings[9] = {"q0", "q1", "qsa", "qy", "qt", "qs", "qc", "q0q1", "q0qy"};
@@ -34,6 +35,7 @@ bool word(string s) {
 
     int state = 0;
     int charpos = 0;
+    currWord = s;
 
     while (s[charpos] != '\0') {
       // cout << "CharPos: " << s[charpos] << ", State: " << state << endl; // For testing
@@ -95,6 +97,8 @@ bool word(string s) {
                     case 'E':
                         state = 7;
                         break;
+                    default:
+                        return false;
             case 3: // qy
                 switch(s[charpos]) {
                     case 'a':
@@ -109,6 +113,8 @@ bool word(string s) {
                     case 'y':
                         state = 2;
                         break;
+                    default:
+                        return false;
                 }
                 break;
             case 4: // qt
@@ -125,6 +131,8 @@ bool word(string s) {
                     case 's':
                         state = 2;
                         break;
+                    default:
+                        return false;
                 }
                 break;
             case 5: // qs
@@ -141,11 +149,14 @@ bool word(string s) {
                     case 'h':
                         state = 2;
                         break;
+                    default:
+                        return false;
                 }
                 break;
             case 6: // qc
                 if (s[charpos] == 'h')
                     state = 2;
+                else return false;
                 break;
             case 7: // q0q1
                 switch(s[charpos]) {
@@ -156,11 +167,6 @@ bool word(string s) {
                     case 'u':
                     case 'I':
                     case 'E':
-                        state = 7; //Added combo for apple
-                        break;
-                    case 'p':
-                    case 'l':
-                    //case 'e':     
                         state = 7;
                         break;
                     case 'n':
@@ -178,7 +184,7 @@ bool word(string s) {
                     case 'h':
                     case 'k':
                     case 'm':
-                    //case 'p':
+                    case 'p':
                     case 'r':
                         state = 3;
                         break;
@@ -191,6 +197,8 @@ bool word(string s) {
                     case 'c':
                         state = 6;
                         break;
+                    default:
+                        return false;
                 }
                 break;
             case 8: // q0qy
@@ -232,6 +240,8 @@ bool word(string s) {
                     case 'c':
                         state = 6;
                         break;
+                    default:
+                        return false;
                 }
                 break;
         }
@@ -393,7 +403,7 @@ int scanner(tokentype& tt, string& w)
       tt = PERIOD;
   } else {
     tt = ERROR;
-    cout << "ERROR: NOT VALID WORD OR PERIOD" << endl;
+    cout << "\nLexical error: " << w << " not a valid token" << endl;
   }
 
   return tt;
@@ -456,13 +466,13 @@ bool token_available = false; //indicates if there was a saved token ava
 // Type of error: **
 // Done by: Alejandro Agustin 
 void syntaxerror1( tokentype expected, string function ){ 
-   cout << "Syntax error: Expected " << tokenName[expected] << " at" << function << endl;
+   cout << "\nSYNTAX ERROR: Expected " << tokenName[expected] << " at" << function << endl;
    exit(1);
 }
 // Type of error: **
 // Done by: Alejandro Agustin 
 void syntaxerror2( tokentype unexpected, string function ) {
-   cout << "Syntax error: Unexpected " << tokenName[unexpected] << " in " << function << endl;
+   cout << "\nSYNTAX ERROR: Unexpected " << currWord << " in " << function << endl;
    exit(1);
 }
 
@@ -644,6 +654,7 @@ int main()
   //** calls the <story> to start parsing
   //** closes the input file 
     
+  cout << "Processing <story>\n" << endl;
 	while(true) {
 		s();
 	}
