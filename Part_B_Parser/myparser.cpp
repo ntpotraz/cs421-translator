@@ -549,6 +549,7 @@ void after_subject() {
             verb();
             tense();
             match(PERIOD);
+            s();
             break;
         case WORD1:
         case PRONOUN:
@@ -587,12 +588,14 @@ void after_noun() {
         case WAS:
             be();
             match(PERIOD);
+            s();
             break;
         case DESTINATION:
             match(DESTINATION);
             verb();
             tense();
             match(PERIOD);
+            s();
             break;
         case OBJECT:
             match(OBJECT);
@@ -624,6 +627,7 @@ void after_object() {
             verb();
             tense();
             match(PERIOD);
+            s();
             break;
         case WORD1:
         case PRONOUN:
@@ -632,6 +636,7 @@ void after_object() {
             verb();
             tense();
             match(PERIOD);
+            s();
             break;
         default:
             syntaxerror2(next_token(), "<after object>");
@@ -655,9 +660,7 @@ int main()
   //** closes the input file 
     
   cout << "Processing <story>\n" << endl;
-	while(true) {
-		s();
-	}
+	s();
 
 	fin.close();
   return 0;
