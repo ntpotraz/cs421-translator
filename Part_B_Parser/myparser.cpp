@@ -649,7 +649,7 @@ string filename;
 //----------- Driver ---------------------------
 
 // The new test driver to start the parser
-// Done by:  **
+// Done by:  *Nathan Potraz*
 int main()
 {
   cout << "Enter the input file name: ";
