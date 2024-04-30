@@ -13,6 +13,7 @@ If the member did not fully contribute to the assigned part, do not list his/her
   Who wrote which parser functions? 
   functions             who
   ----------------      ----------
+  story()               Nathan Potraz
   s()                   Adam Saltar
   noun()                Adam Saltar
   after_subject()       Adam Saltar, bug fixes by Nathan

@@ -3,6 +3,8 @@
 #include<string>
 using namespace std;
 
+void story();
+void s();
 void verb();
 void be();
 void tense();
@@ -513,20 +515,16 @@ bool match(tokentype expected) {
 // ** Be sure to put the corresponding grammar rule above each function
 // ** Be sure to put the name of the programmer above each function
 
-// Grammar: **
-// Done by: **
+// Processing <story>
+// Done by: *Nathan Potraz*
 
 void story() {
   cout << "Processing <story>\n" << endl;
-    if (next_token() == CONNECTOR) {  // Optional CONNECTOR
-        match(CONNECTOR);
-        s();
-    } else {
-      syntaxerror2(next_token(), "<s>");
-    }
+  s();
 }
 
 // Processing <s>
+// Grammar: <s> ::= [CONNECTOR]<noun>SUBJECT<after_subject>
 // Done by: Adam Salter
 void s() {
     cout << "Processing <s>" << endl;
@@ -551,6 +549,7 @@ void noun() {
 }
 
 // Processing <after subject>
+// Grammar: <after_subject> ::= <verb><tense>PERIOD | <noun><after_noun>
 // Done by: Adam Salter
 void after_subject() {
     cout << "Processing <after subject>" << endl;
@@ -591,6 +590,7 @@ void tense() {
 }
 
 // Processing <after noun>
+// Grammar: <after_noun> ::= <be>PERIOD | DESTINATION<verb><tense>PEROID | OBJECT<after_object>
 // Done by: Adam Salter
 void after_noun() {
     cout << "Processing <after noun>" << endl;
@@ -629,6 +629,7 @@ void be() {
 }
 
 // Processing <after object>
+// Grammar: <after_object> ::= <verb><tense>PERIOD | <noun>DESTINATION<verb><tense>PERIOD
 // Done by: Adam Salter
 void after_object() {
     cout << "Processing <after object>" << endl;
@@ -670,8 +671,7 @@ int main()
   //** calls the <story> to start parsing
   //** closes the input file 
     
-  cout << "Processing <story>\n" << endl;
-	s();
+  story();
 
 	fin.close();
   return 0;
