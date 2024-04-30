@@ -30,6 +30,10 @@ void after_noun();
 string currWord;
 
 bool word(string s) {
+    if (s.empty()) {
+      return false;
+    }
+    
     string array_of_strings[9] = {"q0", "q1", "qsa", "qy", "qt", "qs", "qc", "q0q1", "q0qy"};
 
     // q0 = state 0, q1 = state 1, qsa = state 2...
@@ -371,7 +375,7 @@ int scanner(tokentype& tt, string& w)
   if(word(w)) {
     bool foundWord = false;
 
-    for(int i = 0; i < sizeof(reservedWords); i++) {
+    for(int i = 0; i < 19; i++) {
       if(reservedWords[i].str == w) {
         tt = reservedWords[i].token;
         foundWord = true;
