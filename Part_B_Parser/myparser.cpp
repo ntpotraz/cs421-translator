@@ -664,6 +664,8 @@ string filename;
 // Done by:  *Nathan Potraz*
 int main()
 {
+  cout << "Group 10 Parser" << endl;
+  cout << "Created by: Nathan Potraz, Adam Saltar, and Alejandro Agustin\n" << endl;
   cout << "Enter the input file name: ";
   cin >> filename;
   fin.open(filename.c_str());
