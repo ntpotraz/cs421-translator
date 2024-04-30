@@ -480,7 +480,7 @@ void syntaxerror2( tokentype unexpected, string function ) {
 // saved_token and saved_lexeme
 
 // Purpose: **
-// Done by: Alejandro Agustin
+// Done by: Alejandro Agustin, Nathan Potraz
 tokentype next_token(){
 		string saved_lexeme; // The current word being looked at
     if(!token_available){
@@ -495,7 +495,7 @@ tokentype next_token(){
 }
 
 // Purpose: **
-// Done by: Alejandro Agustin
+// Done by: Alejandro Agustin, Nathan Potraz
 bool match(tokentype expected) {
    if (next_token() != expected){
         syntaxerror1(expected, "Match");
@@ -516,6 +516,16 @@ bool match(tokentype expected) {
 // Grammar: **
 // Done by: **
 
+void story() {
+  cout << "Processing <story>\n" << endl;
+    if (next_token() == CONNECTOR) {  // Optional CONNECTOR
+        match(CONNECTOR);
+        s();
+    } else {
+      syntaxerror2(next_token(), "<s>");
+    }
+}
+
 // Processing <s>
 // Done by: Adam Salter
 void s() {
@@ -527,6 +537,7 @@ void s() {
     match(SUBJECT);
     after_subject();
 }
+
 
 // Processing <noun>
 // Done by: Adam Salter
@@ -667,4 +678,3 @@ int main()
 }// end
 //** require no other input files!
 //** syntax error EC requires producing errors.txt of error messages
-//** tracing On/Off EC requires sending a flag to trace message output functions

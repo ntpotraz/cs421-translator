@@ -1,31 +1,43 @@
 
 Fill this out and submitIt_LK this file with the executable.
 
-Group#:
+Group#: 10
 
 Must have divided the work as specified.
 If the member did not fully contribute to the assigned part, do not list his/her name!
 
 1.State who did what by indicating: 
-  Member A tasks (syntax error functions) - who:
-  Member B tasks (match and next_token)- who:
-  Member C tasks (main()) who:
+  Member A tasks (syntax error functions) - who: Alejandro Agustin
+  Member B tasks (match and next_token)- who: Mostly Alejandro Agustin, bug fixes by Nathan
+  Member C tasks (main()) who: Nathan Potraz
   Who wrote which parser functions? 
   functions             who
   ----------------      ----------
+  s()                   Adam Saltar
+  noun()                Adam Saltar
+  after_subject()       Adam Saltar, bug fixes by Nathan
+  verb()                Adam Saltar
+  tense()               Adam Saltar
+  after_noun()          Adam Saltar, bug fixes by Nathan
+  be()                  Adam Saltar
+  after_object()        Adam Saltar, bug fixes by Nathan
 
 2.  Who came to the meeting to test the program together?
+    All 3 of us met over Discord 
 
 3.  You have included all the required comments? 
     (Grammer: and Done by: )
+    Yes
 
 4.  The parser produced correct output for 
     all 6 test cases?
+    Yes
 
 5.  What extra credit feature did you include?
     If it is error correction, did you make sure errors.txt
     got produced?
     [ You may still do EC later ]
+    None so far
         
 checkIt_LK in 24 hours and immediately correct and resubmit.     
 
