@@ -1,0 +1,15 @@
+Script started on 2024-05-16 13:43:34-07:00 [TERM="xterm-256color" TTY="/dev/pts/7" COLUMNS="211" LINES="44"]
+]0;potra002@empress:~/Documents/cs421/cs421-translator/Part_C_Translator[?2004h[potra002@empress Part_C_Translator]$ g++ translator.cpp
+[?2004l]0;potra002@empress:~/Documents/cs421/cs421-translator/Part_C_Translator[?2004h[potra002@empress Part_C_Translator]$ ./a.out
+[?2004lEnter the input file name: partCtest2
+
+SYNTAX ERROR: Expected PERIOD at "ne"
+]0;potra002@empress:~/Documents/cs421/cs421-translator/Part_C_Translator[?2004h[potra002@empress Part_C_Translator]$ cat translated.txt
+[?2004lCONNECTOR: Then
+ACTOR: I/me
+DESCRIPTION: rika
+TENSE: IS
+]0;potra002@empress:~/Documents/cs421/cs421-translator/Part_C_Translator[?2004h[potra002@empress Part_C_Translator]$ exit
+[?2004lexit
+
+Script done on 2024-05-16 13:44:02-07:00 [COMMAND_EXIT_CODE="0"]

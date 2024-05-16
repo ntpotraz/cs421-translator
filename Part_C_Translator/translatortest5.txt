@@ -1,0 +1,14 @@
+Script started on 2024-05-16 13:46:08-07:00 [TERM="xterm-256color" TTY="/dev/pts/7" COLUMNS="211" LINES="44"]
+]0;potra002@empress:~/Documents/cs421/cs421-translator/Part_C_Translator[?2004h[potra002@empress Part_C_Translator]$ g++ transltor.cpp
+[?2004l[01m[Kcc1plus:[m[K [01;31m[Kfatal error: [m[Ktransltor.cpp: No such file or directory
+compilation terminated.
+]0;potra002@empress:~/Documents/cs421/cs421-translator/Part_C_Translator[?2004h[potra002@empress Part_C_Translator]$ g++ transltor.cp[Ktranslator.cpp
+[?2004l]0;potra002@empress:~/Documents/cs421/cs421-translator/Part_C_Translator[?2004h[potra002@empress Part_C_Translator]$ ./a.out
+[?2004lEnter the input file name: tranpartCtest5
+
+SYNTAX ERROR: Unexpected wa in <s>
+]0;potra002@empress:~/Documents/cs421/cs421-translator/Part_C_Translator[?2004h[potra002@empress Part_C_Translator]$ cat translated.txt
+[?2004l]0;potra002@empress:~/Documents/cs421/cs421-translator/Part_C_Translator[?2004h[potra002@empress Part_C_Translator]$ exit
+[?2004lexit
+
+Script done on 2024-05-16 13:46:48-07:00 [COMMAND_EXIT_CODE="0"]
