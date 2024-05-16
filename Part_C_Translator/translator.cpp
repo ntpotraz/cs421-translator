@@ -752,7 +752,7 @@ void gen(const string& line_type) {
 
 // Function to get the next token from the input file
 void getNextToken() {
-    fin >> saved_token >> saved_lexeme;
+    fin >> tokenName[saved_token] >> saved_lexeme;
     cout << "We in getNextToken()" << endl;
 }
 
@@ -765,8 +765,8 @@ void story();
 // Function to handle the <story> rule
 void story() {
     s();
-    while (fin >> saved_token) {
-        fin.putback(saved_token[0]);
+    while (fin >> tokenName[saved_token]) {
+        fin.putback(tokenName[saved_token][0]);
         s();
     }
 }
@@ -774,7 +774,7 @@ void story() {
 // Function to handle the <s> rule
 void s() {
     getNextToken();
-    if (saved_token == "CONNECTOR") {
+    if (tokenName[saved_token] == "CONNECTOR") {
         getEword();
         gen("CONNECTOR");
         getNextToken();
@@ -788,7 +788,7 @@ void s() {
 // Function to handle the <after subject> rule
 void afterSubject() {
     getNextToken();
-    if (saved_token == "VERB") {
+    if (tokenName[saved_token] == "VERB") {
         getEword();
         gen("ACTION");
         getNextToken(); // Get tense
@@ -804,12 +804,12 @@ void afterSubject() {
 // Function to handle the <after noun> rule
 void afterNoun() {
     getNextToken();
-    if (saved_token == "BE") {
+    if (tokenName[saved_token] == "BE") {
         gen("DESCRIPTION");
         getNextToken(); // Get tense
         gen("TENSE");
         getNextToken(); // Get period
-    } else if (saved_token == "DESTINATION") {
+    } else if (tokenName[saved_token] == "DESTINATION") {
         gen("TO");
         getNextToken(); // Get verb
         getEword();
@@ -817,7 +817,7 @@ void afterNoun() {
         getNextToken(); // Get tense
         gen("TENSE");
         getNextToken(); // Get period
-    } else if (saved_token == "OBJECT") {
+    } else if (tokenName[saved_token] == "OBJECT") {
         gen("OBJECT");
         afterObject();
     }
@@ -826,13 +826,13 @@ void afterNoun() {
 // Function to handle the <after object> rule
 void afterObject() {
     getNextToken();
-    if (saved_token == "VERB") {
+    if (tokenName[saved_token] == "VERB") {
         getEword();
         gen("ACTION");
         getNextToken(); // Get tense
         gen("TENSE");
         getNextToken(); // Get period
-    } else if (saved_token == "NOUN") {
+    } else if (tokenName[saved_token] == "NOUN") {
         getEword();
         getNextToken(); // Get destination
         gen("TO");
