@@ -377,6 +377,7 @@ int scanner(tokentype& tt, string& w)
   if(word(w)) {
     bool foundWord = false;
 
+    cout << "LOOKING FOR WORD: " << w << endl;
     for(int i = 0; i < 19; i++) {
       if(reservedWords[i].str == w) {
         tt = reservedWords[i].token;
@@ -414,7 +415,7 @@ int scanner(tokentype& tt, string& w)
     cout << "\nLexical error: " << w << " not a valid token" << endl;
   }
 
-  cout << "End of scanner(), token = " << tokenName[tt] << endl;
+  cout << "WORD " << w << " FOUND, TOKEN: " << tokenName[tt] << endl;
   return tt;
 }//the end of scanner
 
@@ -474,8 +475,8 @@ bool token_available = false; //indicates if there was a saved token ava
 
 // Type of error: **
 // Done by: Alejandro Agustin 
-void syntaxerror1( tokentype expected, string function ){ 
-   cout << "\nSYNTAX ERROR: Expected " << tokenName[expected] << " at" << function << endl;
+void syntaxerror1( tokentype expected){ 
+   cout << "\nSYNTAX ERROR: Expected " << tokenName[expected] << " at \"" << saved_lexeme << "\"" << endl;
    exit(1);
 }
 // Type of error: **
@@ -492,22 +493,39 @@ void syntaxerror2( tokentype unexpected, string function ) {
 // Done by: Alejandro Agustin, Nathan Potraz
 tokentype next_token(){
 		// string saved_lexeme; // The current word being looked at
-    //if(!token_available){
+    if(!token_available){
         scanner(saved_token, saved_lexeme);
+        cout << "saved_lexeme: " << saved_lexeme << endl;
         if(saved_token == EOFM) {
           cout << "\nSuccessfully parsed <story>" << endl;
           exit(0);
         }
-        //token_available = true;
-   //}
+        token_available = true;
+   }
    return saved_token;
 }
 
 // Purpose: **
 // Done by: Alejandro Agustin, Nathan Potraz
 bool match(tokentype expected) {
-   if (next_token() != expected){
-        syntaxerror1(expected, "Match");
+   if (saved_token != expected){
+     if (expected == VERB && (saved_token == VERBNEG || saved_token == VERBPAST || saved_token == VERBPASTNEG || saved_token == WORD2)) {
+        token_available = false;
+				cout << "Matched " << tokenName[expected] << endl;
+        return true;
+     }
+     if (expected == PRONOUN && saved_token == WORD1) {
+        token_available = false;
+				cout << "Matched " << tokenName[expected] << endl;
+        return true;
+     }
+     if (expected == IS && saved_token == WAS) {
+        token_available = false;
+				cout << "Matched " << tokenName[expected] << endl;
+        return true;
+     }
+
+        syntaxerror1(expected);
         return false;
    } else {
         token_available = false;
@@ -744,7 +762,7 @@ void getEword() {
 // Done by: **Adam Salter** 
 
 // Function to generate lines of IR and write to translated.txt
-void gen(const string& line_type) {
+void gen(string line_type) {
     if (!outFile.is_open()) {
         cerr << "Output file not open for writing." << endl;
         return;
@@ -788,19 +806,27 @@ void s() {
     next_token();
     // if (tokenName[saved_token] == "CONNECTOR") {
     if (saved_token == CONNECTOR) {
+        match(CONNECTOR);
+        cout << "WE CONNECTOR" << endl;
         getEword();
         gen("CONNECTOR");
         next_token();
     }
     // Assuming <noun> is processed here
-    getEword();
-    next_token();
-    if(saved_token == SUBJECT) {
-      gen("ACTOR");
-      afterSubject();
-    } else {
-      cout << "NO SUBJECT" << endl;
-      exit(1);
+    else if(saved_token == PRONOUN || saved_token == WORD1) {
+      match(PRONOUN);
+      getEword();
+      next_token();
+      if(saved_token == SUBJECT) {
+        match(SUBJECT);
+        gen("ACTOR");
+        afterSubject();
+      } else {
+        match(SUBJECT); 
+      }
+    }
+    else {
+      syntaxerror2(saved_token, "<s>");
     }
 }
 
@@ -810,15 +836,21 @@ void afterSubject() {
     next_token();
     // if (tokenName[saved_token] == "VERB") {
     if (saved_token == VERB || saved_token == WORD2) {
+        match(VERB);
         getEword();
         gen("ACTION");
         next_token(); // Get tense
+        match(VERB);
         gen("TENSE");
         next_token(); // Get period
-    } else {
+        match(PERIOD);
+    } else if(saved_token == PRONOUN || saved_token == WORD1){
         // Assuming <noun> is processed here
+        match(PRONOUN);
         getEword();
         afterNoun();
+    } else {
+      syntaxerror2(saved_token, "<afterSubject>");
     }
 }
 
@@ -828,23 +860,34 @@ void afterNoun() {
     next_token();
     // if (tokenName[saved_token] == "BE") {
     if (saved_token == IS || saved_token == WAS) {
+        match(IS); 
         gen("DESCRIPTION");
-        // next_token(); // Get tense
-        gen("TENSE");
-        next_token(); // Get period
-    // } else if (tokenName[saved_token] == "DESTINATION") {
-    } else if (saved_token == DESTINATION) {
-        gen("TO");
-        next_token(); // Get verb
-        getEword();
-        gen("ACTION");
         next_token(); // Get tense
         gen("TENSE");
         next_token(); // Get period
+        match(PERIOD);
+    // } else if (tokenName[saved_token] == "DESTINATION") {
+    } else if (saved_token == DESTINATION) {
+        match(DESTINATION);
+        gen("TO");
+        next_token(); // Get verb
+        match(VERB);
+        if(saved_token == VERB || saved_token == WORD2) {
+          getEword();
+          gen("ACTION");
+          next_token(); // Get tense
+          match(VERB);
+          gen("TENSE");
+          next_token(); // Get period
+          match(PERIOD);
+        }
     // } else if (tokenName[saved_token] == "OBJECT") {
     } else if (saved_token == OBJECT) {
+        match(OBJECT);
         gen("OBJECT");
         afterObject();
+    } else {
+      syntaxerror2(saved_token, "<afterNoun>");
     }
 }
 
@@ -854,21 +897,33 @@ void afterObject() {
     next_token();
     //if (tokenName[saved_token] == "VERB") {
     if (saved_token == VERB || saved_token == WORD2) {
+        cout << "WE A VERB" << endl;
+        match(VERB);
         getEword();
         gen("ACTION");
         next_token(); // Get tense
+        match(VERB);
         gen("TENSE");
         next_token(); // Get period
+        match(PERIOD);
     } else if (saved_token == PRONOUN || saved_token == WORD1) {
+        cout << "WE A NOUN" << endl;
+        match(PRONOUN);
         getEword();
         next_token(); // Get destination
+        match(DESTINATION);
         gen("TO");
         next_token(); // Get verb
+        match(VERB);
         getEword();
         gen("ACTION");
         next_token(); // Get tense
+        match(VERB);
         gen("TENSE");
         next_token(); // Get period
+        match(PERIOD);
+    } else {
+      syntaxerror2(saved_token, "<afterObject>");
     }
 }
 
