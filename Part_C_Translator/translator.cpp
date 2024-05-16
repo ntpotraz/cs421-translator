@@ -795,7 +795,6 @@ void story() {
     cout << "story() called" << endl;
     s();
     while (saved_token != EOFM) {
-        outFile << "\n";
         s();
     }
 }
@@ -844,6 +843,7 @@ void afterSubject() {
         gen("TENSE");
         next_token(); // Get period
         match(PERIOD);
+        outFile << "\n";
     } else if(saved_token == PRONOUN || saved_token == WORD1){
         // Assuming <noun> is processed here
         match(PRONOUN);
@@ -862,10 +862,11 @@ void afterNoun() {
     if (saved_token == IS || saved_token == WAS) {
         match(IS); 
         gen("DESCRIPTION");
-        next_token(); // Get tense
+        // next_token(); // Get tense
         gen("TENSE");
         next_token(); // Get period
         match(PERIOD);
+        outFile << "\n";
     // } else if (tokenName[saved_token] == "DESTINATION") {
     } else if (saved_token == DESTINATION) {
         match(DESTINATION);
@@ -880,6 +881,7 @@ void afterNoun() {
           gen("TENSE");
           next_token(); // Get period
           match(PERIOD);
+          outFile << "\n";
         }
     // } else if (tokenName[saved_token] == "OBJECT") {
     } else if (saved_token == OBJECT) {
@@ -906,6 +908,7 @@ void afterObject() {
         gen("TENSE");
         next_token(); // Get period
         match(PERIOD);
+        outFile << "\n";
     } else if (saved_token == PRONOUN || saved_token == WORD1) {
         cout << "WE A NOUN" << endl;
         match(PRONOUN);
@@ -922,6 +925,7 @@ void afterObject() {
         gen("TENSE");
         next_token(); // Get period
         match(PERIOD);
+        outFile << "\n";
     } else {
       syntaxerror2(saved_token, "<afterObject>");
     }
