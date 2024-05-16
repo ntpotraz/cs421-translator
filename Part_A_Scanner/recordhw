@@ -1,0 +1,34 @@
+#!/bin/csh -f
+if ($#argv == 0) then
+   echo "Usage: 'recordhw' followed by the name of the file (.txt) to hold the record."
+else if ($?RECORDHW) then
+   echo "You are already recording!  Into file $RECORDHW."
+   echo "  (no new recording has been started.)"
+else
+   if (-e $argv[1]) then
+      echo $argv[1] " already exists; please first remove it "
+      echo "  (if it's an old recording) or choose another name."
+   else
+      setenv RECORDHW $argv[1]
+      echo \
+       "Recording of your homework run will start with the next command prompt."
+      echo "  WHEN YOU ARE FINISHED: say 'exit' at the command prompt."
+      echo "  It will end the recording."
+      script ,$argv[1] 
+       ##
+    #  echo "Current state of your file: " 
+    #  cat -v ,$argv[1]
+      echo "Recording is finished;"
+      echo "  cleaning extraneous characters from your homework recording..."
+      /cs/bin/clean-script ,$argv[1] > $argv[1]
+      chmod u-w $argv[1]
+      rm -f ,$argv[1]
+      echo "  cleaning is done;"
+      echo "==> YOUR RECORDING is in " $argv[1]
+      echo \
+	"Please DO NOT attempt to edit it (you will be unable to in any case)"
+      echo ""
+      unsetenv RECORDHW
+endif
+endif
+endif
