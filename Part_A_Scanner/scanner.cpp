@@ -347,7 +347,7 @@ int scanner(tokentype& tt, string& w)
     bool foundWord = false;
 
     // for(wordTable word : reservedWords) {
-    for(int i = 0; i < sizeof(reservedWords); i++) {
+    for(int i = 0; i < 19; i++) {
       if(reservedWords[i].str == w) {
         tt = reservedWords[i].token;
         foundWord = true;
@@ -411,8 +411,7 @@ int main()
                                    // the arguments  
        if (theword == "eofm") break;  // stop now
 
-       cout << "Type is:" << tokenName[thetype] << endl;
-       cout << "Word is:" << theword << endl;   
+       cout << "\"" << theword << "\" is token type " << tokenName[thetype] << "\n" << endl; 
     }
 
    cout << "End of file is encountered." << endl;
