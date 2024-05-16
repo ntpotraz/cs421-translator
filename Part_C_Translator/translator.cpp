@@ -352,7 +352,7 @@ int scanner(tokentype& tt, string& w)
 
   fin >> w;
 
-	cout << "Scanner called using word: " << w << endl;
+	// cout << "Scanner called using word: " << w << endl;
 
   // 1. If it is eofm, return right now.   
   if(w == "eofm") {
@@ -377,7 +377,7 @@ int scanner(tokentype& tt, string& w)
   if(word(w)) {
     bool foundWord = false;
 
-    cout << "LOOKING FOR WORD: " << w << endl;
+    // cout << "LOOKING FOR WORD: " << w << endl;
     for(int i = 0; i < 19; i++) {
       if(reservedWords[i].str == w) {
         tt = reservedWords[i].token;
@@ -415,7 +415,7 @@ int scanner(tokentype& tt, string& w)
     cout << "\nLexical error: " << w << " not a valid token" << endl;
   }
 
-  cout << "WORD " << w << " FOUND, TOKEN: " << tokenName[tt] << endl;
+  // cout << "WORD " << w << " FOUND, TOKEN: " << tokenName[tt] << endl;
   return tt;
 }//the end of scanner
 
@@ -495,7 +495,7 @@ tokentype next_token(){
 		// string saved_lexeme; // The current word being looked at
     if(!token_available){
         scanner(saved_token, saved_lexeme);
-        cout << "saved_lexeme: " << saved_lexeme << endl;
+        // cout << "saved_lexeme: " << saved_lexeme << endl;
         if(saved_token == EOFM) {
           cout << "\nSuccessfully parsed <story>" << endl;
           exit(0);
@@ -511,17 +511,17 @@ bool match(tokentype expected) {
    if (saved_token != expected){
      if (expected == VERB && (saved_token == VERBNEG || saved_token == VERBPAST || saved_token == VERBPASTNEG || saved_token == WORD2)) {
         token_available = false;
-				cout << "Matched " << tokenName[expected] << endl;
+				// cout << "Matched " << tokenName[expected] << endl;
         return true;
      }
      if (expected == PRONOUN && saved_token == WORD1) {
         token_available = false;
-				cout << "Matched " << tokenName[expected] << endl;
+				// cout << "Matched " << tokenName[expected] << endl;
         return true;
      }
      if (expected == IS && saved_token == WAS) {
         token_available = false;
-				cout << "Matched " << tokenName[expected] << endl;
+				// cout << "Matched " << tokenName[expected] << endl;
         return true;
      }
 
@@ -529,7 +529,7 @@ bool match(tokentype expected) {
         return false;
    } else {
         token_available = false;
-				cout << "Matched " << tokenName[expected] << endl;
+				// cout << "Matched " << tokenName[expected] << endl;
         return true;
    }
 }
@@ -792,7 +792,7 @@ void story();
 
 // Function to handle the <story> rule
 void story() {
-    cout << "story() called" << endl;
+    // cout << "story() called" << endl;
     s();
     while (saved_token != EOFM) {
         s();
@@ -801,12 +801,12 @@ void story() {
 
 // Function to handle the <s> rule
 void s() {
-    cout << "s() called" << endl;
+    // cout << "s() called" << endl;
     next_token();
     // if (tokenName[saved_token] == "CONNECTOR") {
     if (saved_token == CONNECTOR) {
         match(CONNECTOR);
-        cout << "WE CONNECTOR" << endl;
+        // cout << "WE CONNECTOR" << endl;
         getEword();
         gen("CONNECTOR");
         next_token();
@@ -831,7 +831,7 @@ void s() {
 
 // Function to handle the <after subject> rule
 void afterSubject() {
-    cout << "afterSubject() called" << endl;
+    // cout << "afterSubject() called" << endl;
     next_token();
     // if (tokenName[saved_token] == "VERB") {
     if (saved_token == VERB || saved_token == WORD2) {
@@ -856,7 +856,7 @@ void afterSubject() {
 
 // Function to handle the <after noun> rule
 void afterNoun() {
-    cout << "afterNoun() called" << endl;
+    // cout << "afterNoun() called" << endl;
     next_token();
     // if (tokenName[saved_token] == "BE") {
     if (saved_token == IS || saved_token == WAS) {
@@ -895,11 +895,11 @@ void afterNoun() {
 
 // Function to handle the <after object> rule
 void afterObject() {
-    cout << "afterObject() called" << endl;
+    // cout << "afterObject() called" << endl;
     next_token();
     //if (tokenName[saved_token] == "VERB") {
     if (saved_token == VERB || saved_token == WORD2) {
-        cout << "WE A VERB" << endl;
+        // cout << "WE A VERB" << endl;
         match(VERB);
         getEword();
         gen("ACTION");
@@ -910,7 +910,7 @@ void afterObject() {
         match(PERIOD);
         outFile << "\n";
     } else if (saved_token == PRONOUN || saved_token == WORD1) {
-        cout << "WE A NOUN" << endl;
+        // cout << "WE A NOUN" << endl;
         match(PRONOUN);
         getEword();
         next_token(); // Get destination
