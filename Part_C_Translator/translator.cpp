@@ -748,7 +748,7 @@ void loadLexicon() {
 // ** Declare Lexicon (i.e. dictionary) that will hold the content of lexicon.txt
 // Make sure it is easy and fast to look up the translation.
 // Do not change the format or content of lexicon.txt
-// Done by: **Adam Salter** 
+// Done by: **Alejandro Agustin** 
 
 // Function to translate Japanese words to English
 void getEword() {
@@ -759,8 +759,8 @@ void getEword() {
         saved_E_word = saved_lexeme; // If not found, use the Japanese word as a fallback
     }
 }
-// Done by: **Adam Salter** 
 
+// Done by: **Nathan Potraz** 
 // Function to generate lines of IR and write to translated.txt
 void gen(string line_type) {
     if (!outFile.is_open()) {
@@ -776,13 +776,6 @@ void gen(string line_type) {
     }
     outFile << endl;
 }
-// Done by: **Adam Salter and Alejandro Agustin** 
-
-// Function to get the next token from the input file
-// void getNextToken() {
-//     fin >> tokenName[saved_token] >> saved_lexeme;
-//     cout << "tokenName[saved_token]: " << tokenName[saved_token] << endl;
-// }
 
 void afterObject();
 void afterNoun();
@@ -790,6 +783,7 @@ void afterSubject();
 void s();
 void story();
 
+// Done by: **Alejandro Agustin, Nathan Potraz** 
 // Function to handle the <story> rule
 void story() {
     // cout << "story() called" << endl;
@@ -798,8 +792,10 @@ void story() {
         s();
     }
 }
-
+// *Done by:*Adam Salter, Nathan Potraz** 
 // Function to handle the <s> rule
+// <s> ::= [CONNECTOR #getEword# #gen("CONNECTOR")#] <noun> #getEword# 
+//                 SUBJECT #gen("ACTOR")# <after subject> 
 void s() {
     // cout << "s() called" << endl;
     next_token();
@@ -829,7 +825,10 @@ void s() {
     }
 }
 
+// Done by: **Adam Salter, Nathan Potraz** 
 // Function to handle the <after subject> rule
+// <after subject> ::= <verb> #getEword# #gen("ACTION")# <tense> #gen("TENSE")# 
+//                     PERIOD | <noun> #getEword# <after noun>
 void afterSubject() {
     // cout << "afterSubject() called" << endl;
     next_token();
@@ -854,7 +853,12 @@ void afterSubject() {
     }
 }
 
+// Done by: **Adam Salter, Nathan Potraz** 
 // Function to handle the <after noun> rule
+// <after noun> ::= <be> #gen("DESCRIPTION")# #gen("TENSE")# PERIOD |
+//                  DESTINATION #gen("TO")# <verb> #getEword# #gen("ACTION")# 
+//                  <tense> #gen("TENSE")# PERIOD |
+//                  OBJECT #gen("OBJECT")# <after object>
 void afterNoun() {
     // cout << "afterNoun() called" << endl;
     next_token();
@@ -893,7 +897,11 @@ void afterNoun() {
     }
 }
 
+// Done by: **Adam Salter, Nathan Potraz** 
 // Function to handle the <after object> rule
+// <after object> ::= <verb> #getEword# #gen("ACTION")# <tense> #gen("TENSE")# 
+//                    PERIOD | <noun> #getEword# DESTINATION #gen("TO")# <verb> 
+//                    #getEword# #gen("ACTION")# <tense> #gen("TENSE")# PERIOD
 void afterObject() {
     // cout << "afterObject() called" << endl;
     next_token();
@@ -931,6 +939,7 @@ void afterObject() {
     }
 }
 
+// Done by: **Adam Salter** 
 // Driver function
 int main() {
     string filename;
