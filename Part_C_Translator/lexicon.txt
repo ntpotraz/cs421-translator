@@ -1,31 +1,30 @@
-  watashi	I/me				
-  anata		you				
-  kare		he/him				
-  kanojo	she/her				
-  sore      	it				
+watashi     I/me
+anata       you
+kare        he/him
+kanoj       she/her
+sore        it
 
-  mata          Also                           	
-  soshite       Then                   		
-  shikashi	However				
-  dakara	Therefore			
+mata        Also
+soshite     Then
+shikashi    However
+dakara      Therefore
 
-daigaku     college    
-kurasu      class     
-hon         book     
-tesuto      test     
+daigaku     college
+kurasu      class
+hon         book
+tesuto      test
 ie          home
 isu         chair
 seito       student
 sensei      teacher
 tomodachi   friend
-jidoosha    car    
+jidoosha    car
 gyuunyuu    milk
 biiru       beer
 choucho     butterfly
 ryouri      cooking
-toire	    restroom
+toire       restroom
 gohan       meal
- 
 
 yasashii    easy 
 muzukashii  difficult

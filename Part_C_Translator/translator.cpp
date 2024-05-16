@@ -24,6 +24,11 @@ using namespace std;
 // RE:   **
 
 string currWord;
+map<string, string> Lexicon;  // Global variable for the lexicon
+// saved_token is defined in scanner as a tokentype enum
+string saved_lexeme, saved_E_word;  // Global variables for word management
+ofstream outFile;  // File stream for output
+// ifstream fin; - Defined in scanner section  // File stream for input
 
 bool word(string s) {
     if (s.empty()) {
@@ -297,6 +302,7 @@ bool period(string s) {
 // TABLES Done by: *Nathan Potraz*
 
 // ** Update the tokentype to be WORD1, WORD2, PERIOD, ERROR, EOFM, etc.
+//
 enum tokentype {WORD1, WORD2, PERIOD, ERROR, EOFM, VERB, VERBNEG, VERBPAST, VERBPASTNEG, IS, WAS, OBJECT, SUBJECT, DESTINATION, PRONOUN, CONNECTOR};
 
 // ** For the display names of tokens - must be in the same order as the tokentype.
@@ -408,6 +414,7 @@ int scanner(tokentype& tt, string& w)
     cout << "\nLexical error: " << w << " not a valid token" << endl;
   }
 
+  cout << "End of scanner(), token = " << tokenName[tt] << endl;
   return tt;
 }//the end of scanner
 
@@ -484,15 +491,15 @@ void syntaxerror2( tokentype unexpected, string function ) {
 // Purpose: **
 // Done by: Alejandro Agustin, Nathan Potraz
 tokentype next_token(){
-		string saved_lexeme; // The current word being looked at
-    if(!token_available){
+		// string saved_lexeme; // The current word being looked at
+    //if(!token_available){
         scanner(saved_token, saved_lexeme);
         if(saved_token == EOFM) {
           cout << "\nSuccessfully parsed <story>" << endl;
           exit(0);
         }
-        token_available = true;
-   }
+        //token_available = true;
+   //}
    return saved_token;
 }
 
@@ -685,11 +692,6 @@ string filename;
 // File translator.cpp written by Group Number: 10
 //=================================================
 
-map<string, string> Lexicon;  // Global variable for the lexicon
-// saved_token is defined in scanner as a tokentype enum
-string saved_lexeme, saved_E_word;  // Global variables for word management
-ofstream outFile;  // File stream for output
-// ifstream fin; - Defined in scanner section  // File stream for input
 
 // Function to load lexicon from a file
 void loadLexicon() {
@@ -716,7 +718,14 @@ void loadLexicon() {
 
         Lexicon[japWord] = engWord;
     }
+
     lexFile.close();
+
+    // Prints out the Lexicon Map
+    // for (const auto& [key, value] : Lexicon) {
+    //     cout << "Key[" << key << "]: " << "Value[" << value << "]" << endl;
+    // }
+
 }
 // ** Declare Lexicon (i.e. dictionary) that will hold the content of lexicon.txt
 // Make sure it is easy and fast to look up the translation.
@@ -742,7 +751,8 @@ void gen(const string& line_type) {
     }
     outFile << line_type << ": ";
     if (line_type == "TENSE") {
-        outFile << saved_token; // TENSE uses tokens
+        // outFile << saved_token; // TENSE uses tokens
+        outFile << tokenName[saved_token]; // TENSE uses tokens
     } else {
         outFile << saved_E_word; // Other types use the saved English word
     }
@@ -751,10 +761,10 @@ void gen(const string& line_type) {
 // Done by: **Adam Salter and Alejandro Agustin** 
 
 // Function to get the next token from the input file
-void getNextToken() {
-    fin >> tokenName[saved_token] >> saved_lexeme;
-    cout << "We in getNextToken()" << endl;
-}
+// void getNextToken() {
+//     fin >> tokenName[saved_token] >> saved_lexeme;
+//     cout << "tokenName[saved_token]: " << tokenName[saved_token] << endl;
+// }
 
 void afterObject();
 void afterNoun();
@@ -764,36 +774,47 @@ void story();
 
 // Function to handle the <story> rule
 void story() {
+    cout << "story() called" << endl;
     s();
-    while (fin >> tokenName[saved_token]) {
-        fin.putback(tokenName[saved_token][0]);
+    while (saved_token != EOFM) {
+        outFile << "\n";
         s();
     }
 }
 
 // Function to handle the <s> rule
 void s() {
-    getNextToken();
-    if (tokenName[saved_token] == "CONNECTOR") {
+    cout << "s() called" << endl;
+    next_token();
+    // if (tokenName[saved_token] == "CONNECTOR") {
+    if (saved_token == CONNECTOR) {
         getEword();
         gen("CONNECTOR");
-        getNextToken();
+        next_token();
     }
     // Assuming <noun> is processed here
     getEword();
-    gen("ACTOR");
-    afterSubject();
+    next_token();
+    if(saved_token == SUBJECT) {
+      gen("ACTOR");
+      afterSubject();
+    } else {
+      cout << "NO SUBJECT" << endl;
+      exit(1);
+    }
 }
 
 // Function to handle the <after subject> rule
 void afterSubject() {
-    getNextToken();
-    if (tokenName[saved_token] == "VERB") {
+    cout << "afterSubject() called" << endl;
+    next_token();
+    // if (tokenName[saved_token] == "VERB") {
+    if (saved_token == VERB || saved_token == WORD2) {
         getEword();
         gen("ACTION");
-        getNextToken(); // Get tense
+        next_token(); // Get tense
         gen("TENSE");
-        getNextToken(); // Get period
+        next_token(); // Get period
     } else {
         // Assuming <noun> is processed here
         getEword();
@@ -803,21 +824,25 @@ void afterSubject() {
 
 // Function to handle the <after noun> rule
 void afterNoun() {
-    getNextToken();
-    if (tokenName[saved_token] == "BE") {
+    cout << "afterNoun() called" << endl;
+    next_token();
+    // if (tokenName[saved_token] == "BE") {
+    if (saved_token == IS || saved_token == WAS) {
         gen("DESCRIPTION");
-        getNextToken(); // Get tense
+        // next_token(); // Get tense
         gen("TENSE");
-        getNextToken(); // Get period
-    } else if (tokenName[saved_token] == "DESTINATION") {
+        next_token(); // Get period
+    // } else if (tokenName[saved_token] == "DESTINATION") {
+    } else if (saved_token == DESTINATION) {
         gen("TO");
-        getNextToken(); // Get verb
+        next_token(); // Get verb
         getEword();
         gen("ACTION");
-        getNextToken(); // Get tense
+        next_token(); // Get tense
         gen("TENSE");
-        getNextToken(); // Get period
-    } else if (tokenName[saved_token] == "OBJECT") {
+        next_token(); // Get period
+    // } else if (tokenName[saved_token] == "OBJECT") {
+    } else if (saved_token == OBJECT) {
         gen("OBJECT");
         afterObject();
     }
@@ -825,23 +850,25 @@ void afterNoun() {
 
 // Function to handle the <after object> rule
 void afterObject() {
-    getNextToken();
-    if (tokenName[saved_token] == "VERB") {
+    cout << "afterObject() called" << endl;
+    next_token();
+    //if (tokenName[saved_token] == "VERB") {
+    if (saved_token == VERB || saved_token == WORD2) {
         getEword();
         gen("ACTION");
-        getNextToken(); // Get tense
+        next_token(); // Get tense
         gen("TENSE");
-        getNextToken(); // Get period
-    } else if (tokenName[saved_token] == "NOUN") {
+        next_token(); // Get period
+    } else if (saved_token == PRONOUN || saved_token == WORD1) {
         getEword();
-        getNextToken(); // Get destination
+        next_token(); // Get destination
         gen("TO");
-        getNextToken(); // Get verb
+        next_token(); // Get verb
         getEword();
         gen("ACTION");
-        getNextToken(); // Get tense
+        next_token(); // Get tense
         gen("TENSE");
-        getNextToken(); // Get period
+        next_token(); // Get period
     }
 }
 
